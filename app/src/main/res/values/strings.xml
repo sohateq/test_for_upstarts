@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Test for upstarts</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_add_to_cart">Добавить в корзину</string>
+    <string name="text_counter">Найдено: %d товаров</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.akameko.testforupstarts;
 
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,11 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.akameko.testforupstarts.repository.pojos.Jeans;
 import com.akameko.testforupstarts.repository.retrofit.Repository;
@@ -73,6 +76,7 @@ public class MainFragment extends Fragment {
             if (addToFavourite){
                 sharedViewModel.jeansDatabase.getJeansDao().insert(likedJeans);
                 Log.d("123", "Добавлено в избранное");
+                showLikeNotification();
                 //Log.d("123", jeansDatabase.getJeansDao().getItemById(likedJeans.getId()).toString());
             } else {
                 sharedViewModel.jeansDatabase.getJeansDao().delete(likedJeans);
@@ -89,6 +93,17 @@ public class MainFragment extends Fragment {
         });
 
         recyclerView.setAdapter(mainAdapter);
+
+        TextView textViewCounter = getActivity().findViewById(R.id.text_view_main_count);
+        textViewCounter.setText(String.format(getString(R.string.text_counter), jeansList.size()));
+    }
+
+    private void showLikeNotification(){
+        CardView cardViewNotification = getActivity().findViewById(R.id.card_view_notification_main);
+        cardViewNotification.setVisibility(View.VISIBLE);
+
+        Handler h = new Handler();
+        h.postDelayed(() -> cardViewNotification.setVisibility(View.GONE), 3000);
     }
 
 }

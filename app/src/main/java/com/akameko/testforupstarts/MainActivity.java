@@ -24,8 +24,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    Repository repository  = new Repository();
-    JeansDatabase jeansDatabase ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

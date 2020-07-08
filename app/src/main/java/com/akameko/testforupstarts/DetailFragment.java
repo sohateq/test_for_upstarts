@@ -4,9 +4,11 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,11 +79,14 @@ public class DetailFragment extends Fragment {
 
         buttonLike.setOnClickListener(v -> {
             if (liked){
+                liked = false;
                 buttonLike.setForeground(getResources().getDrawable(R.drawable.like_false));
                 sharedViewModel.removeFromFavourite(jeansToShow);
             } else {
+                liked = true;
                 buttonLike.setForeground(getResources().getDrawable(R.drawable.like_true));
                 sharedViewModel.addToFavourite(jeansToShow);
+                showLikeNotification();
             }
 
 
@@ -91,15 +96,23 @@ public class DetailFragment extends Fragment {
         });
     }
 
+    private void showLikeNotification(){
+        CardView cardViewNotification = getActivity().findViewById(R.id.card_view_notification_detail);
+        cardViewNotification.setVisibility(View.VISIBLE);
+
+        Handler h = new Handler();
+        h.postDelayed(() -> cardViewNotification.setVisibility(View.GONE), 3000);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
     @Override
     public void onStop() {
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onStop();
     }
 }
