@@ -1,6 +1,7 @@
 package com.akameko.testforupstarts;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akameko.testforupstarts.repository.pojos.Jeans;
@@ -19,28 +21,39 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     private List<Jeans> jeansList;
     private List<Jeans> likedJeansList;
+
     private ViewGroup parent; //для предоставления локальных ресурсов в onBingViewHolder
 
     private OnLikeClickListener likeClickListener;
+    private OnItemClickListener itemClickListener;
 
     public interface OnLikeClickListener {
-        void onLikeClick(Jeans likedJeans);
-
-        // public void onLongItemClick(View view, int position);
+        void onLikeClick(Jeans likedJeans, int position, Boolean addToFavourite);
     }
 
     public void setOnLikeClickListener(OnLikeClickListener likeClickListener) {
         this.likeClickListener = likeClickListener;
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(Jeans jeansToShow, int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener itemClickListener){
+        this .itemClickListener = itemClickListener;
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        public CardView cardViewMain;
+
         public ImageView imageViewMain;
         public ImageView imageViewLike;
 
         public TextView textViewNew;
         public TextView textViewTitle;
         public TextView textViewPrice;
+
+        public Boolean liked;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -51,6 +64,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
             imageViewMain = itemView.findViewById(R.id.image_view_main);
             imageViewLike = itemView.findViewById(R.id.image_view_like);
+
+            cardViewMain = itemView.findViewById(R.id.main_card_view);
+
 
 
         }
@@ -72,6 +88,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.liked = likedJeansList.contains(jeansList.get(position));
+        Log.d("onBindViewHolder", holder.liked.toString());
+
+        if ( holder.liked){
+            holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
+        } else {
+            holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false));
+        }
 
         holder.textViewTitle.setText(jeansList.get(position).getTitle());
         holder.textViewPrice.setText(jeansList.get(position).getPrice().toString() + " Р");
@@ -84,15 +108,27 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         holder.imageViewLike.setOnClickListener(v -> {
             if (likeClickListener != null ) {
-                likeClickListener.onLikeClick(jeansList.get(position));
+
+                if ( holder.liked) {
+                    holder.liked = false;
+                    holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false));
+                } else {
+                    holder.liked = true;
+                    holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
+                }
+
+                likeClickListener.onLikeClick(jeansList.get(position), position,  holder.liked);
             }
         });
 
-        if (likedJeansList.contains(jeansList.get(position))){
-            holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
-        } else {
-            holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false));
-        }
+        holder.cardViewMain.setOnClickListener(v -> {
+            if (itemClickListener != null ) {
+
+                itemClickListener.onItemClick(jeansList.get(position), position);
+            }
+        });
+
+
 
 
     }
