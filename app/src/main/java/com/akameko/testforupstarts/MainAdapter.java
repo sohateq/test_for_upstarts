@@ -1,6 +1,5 @@
 package com.akameko.testforupstarts;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akameko.testforupstarts.repository.pojos.Jeans;
@@ -44,7 +43,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public CardView cardViewMain;
+        public ConstraintLayout layoutItemMain;
 
         public ImageView imageViewMain;
         public ImageView imageViewLike;
@@ -65,7 +64,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             imageViewMain = itemView.findViewById(R.id.image_view_main);
             imageViewLike = itemView.findViewById(R.id.image_view_like);
 
-            cardViewMain = itemView.findViewById(R.id.main_card_view);
+            layoutItemMain = itemView.findViewById(R.id.main_item_layout);
 
 
 
@@ -89,7 +88,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.liked = likedJeansList.contains(jeansList.get(position));
-        Log.d("onBindViewHolder", holder.liked.toString());
+        //Log.d("onBindViewHolder", holder.liked.toString());
 
         if ( holder.liked){
             holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
@@ -121,7 +120,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             }
         });
 
-        holder.cardViewMain.setOnClickListener(v -> {
+        holder.layoutItemMain.setOnClickListener(v -> {
             if (itemClickListener != null ) {
 
                 itemClickListener.onItemClick(jeansList.get(position), position);

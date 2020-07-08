@@ -33,48 +33,29 @@ public class MainFragment extends Fragment {
 
     private SharedViewModel sharedViewModel;
 
-    Repository repository  = new Repository();
-    JeansDatabase jeansDatabase ;
-
     public static MainFragment newInstance() {
         return new MainFragment();
     }
 
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.main_fragment, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        View root =inflater.inflate(R.layout.main_fragment, container, false);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-
-
-        jeansDatabase = Room.databaseBuilder(getContext(), JeansDatabase.class, "database").allowMainThreadQueries().build();
-
-        loadJeans();
-
+        initFragment();
+        return root;
     }
 
-    private void loadJeans(){
-        Disposable disposable = repository.getJeans()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                    initRecycler(result);
-                    //updateDatabase(result.getItems());
-                    //getViewState().updateRecycler(result.getItems());
-                    //Log.d("123", result.getItems().get(0).toString());
-                    Log.d("123", "Items loaded!!");
-
-
-                }, throwable -> {
-                    Log.d("123", "Items loading failed", throwable);
-                    //Toast.makeText(this,"load error", Toast.LENGTH_SHORT).show();
-                });
+    private  void initFragment(){
+        sharedViewModel.loadJeans();
+        sharedViewModel.jeansList.observe(getViewLifecycleOwner(), jeansList -> {
+                initRecycler(jeansList);
+        });
     }
+
+
 
     public void initRecycler(List<Jeans> jeansList) {
 
@@ -85,26 +66,16 @@ public class MainFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         recyclerView.setLayoutManager(layoutManager);
 
-        List<Jeans> liked = jeansDatabase.getJeansDao().getAllItems();
+        List<Jeans> liked = sharedViewModel.jeansDatabase.getJeansDao().getAllItems();
         MainAdapter mainAdapter = new MainAdapter(jeansList, liked);
-//        Log.d("123", "here1");
-//        for (Jeans j: liked             ) {
-//            Log.d("123", j.toString());
-//        }
+
         mainAdapter.setOnLikeClickListener((likedJeans, position, addToFavourite) -> {
             if (addToFavourite){
-                jeansDatabase.getJeansDao().insert(likedJeans);
-
-                //mainAdapter.notifyItemChanged(position);
-                //mainAdapter.notifyDataSetChanged();
+                sharedViewModel.jeansDatabase.getJeansDao().insert(likedJeans);
                 Log.d("123", "Добавлено в избранное");
-                Log.d("123", jeansDatabase.getJeansDao().getItemById(likedJeans.getId()).toString());
+                //Log.d("123", jeansDatabase.getJeansDao().getItemById(likedJeans.getId()).toString());
             } else {
-                jeansDatabase.getJeansDao().delete(likedJeans);
-
-                //mainAdapter.notifyItemChanged(position);
-                // mainAdapter.notifyDataSetChanged();
-
+                sharedViewModel.jeansDatabase.getJeansDao().delete(likedJeans);
                 Log.d("123", "Убрано из избранного");
             }
 
@@ -113,14 +84,11 @@ public class MainFragment extends Fragment {
 
         mainAdapter.setOnItemClickListener((jeansToShow, position) -> {
             sharedViewModel.setActiveJeans(jeansToShow);
+            sharedViewModel.setPositionToShow(position);
             ((MainActivity)getActivity()).showDetails();
         });
 
-//        Log.d("123", "here2");
         recyclerView.setAdapter(mainAdapter);
-
-
-
     }
 
 }

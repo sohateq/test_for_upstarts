@@ -6,4 +6,6 @@
     <color name="color_price">#111111</color>
     <color name="color_title">#777777</color>
     <color name="color_lable_new">#111111</color>
+
+    <color name="color_background">#FFFFFF</color>
 </resources>

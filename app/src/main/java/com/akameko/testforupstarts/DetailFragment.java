@@ -1,7 +1,9 @@
 package com.akameko.testforupstarts;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -52,17 +54,40 @@ public class DetailFragment extends Fragment {
         return root;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void init() {
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         jeansToShow = sharedViewModel.getActiveJeans();
+
+        liked = sharedViewModel.jeansDatabase.getJeansDao().getAllItems().contains(jeansToShow);
+        if (liked){
+           buttonLike.setForeground(getResources().getDrawable(R.drawable.like_true));
+        } else {
+            buttonLike.setForeground(getResources().getDrawable(R.drawable.like_false));
+        }
 
         textViewTitle.setText(jeansToShow.getTitle());
         textViewPrice.setText(jeansToShow.getPrice().toString() + " Р");
         Picasso.get().load(jeansToShow.getImage()).into(imageView);
 
         buttonBack.setOnClickListener(v -> {
-            //getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
             getActivity().onBackPressed();
+        });
+
+        buttonLike.setOnClickListener(v -> {
+            if (liked){
+                buttonLike.setForeground(getResources().getDrawable(R.drawable.like_false));
+                sharedViewModel.removeFromFavourite(jeansToShow);
+            } else {
+                buttonLike.setForeground(getResources().getDrawable(R.drawable.like_true));
+                sharedViewModel.addToFavourite(jeansToShow);
+            }
+
+
+
+
+
         });
     }
 
