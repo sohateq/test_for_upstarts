@@ -9,8 +9,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class SharedViewModel : ViewModel() {
-    var repository = App.getComponent().repository
-    var jeansDatabase = App.getComponent().jeansDatabase
+    var repository = App.component!!.repository
+    var jeansDatabase = App.component!!.jeansDatabase
 
     var jeansList = MutableLiveData<List<Jeans>>()
 
@@ -22,7 +22,7 @@ class SharedViewModel : ViewModel() {
 
     //private MutableLiveData<Integer> positionToUpdate = new MutableLiveData<>();
     fun loadJeans() {
-        val disposable = repository.jeans
+        val disposable = repository!!.jeans
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result: List<Jeans> ->
@@ -32,11 +32,11 @@ class SharedViewModel : ViewModel() {
     }
 
     fun addToFavourite(likedJeans: Jeans?) {
-        jeansDatabase.jeansDao.insert(likedJeans)
+        jeansDatabase!!.jeansDao.insert(likedJeans)
     }
 
     fun removeFromFavourite(dislikedJeans: Jeans?) {
-        jeansDatabase.jeansDao.delete(dislikedJeans)
+        jeansDatabase!!.jeansDao.delete(dislikedJeans)
     }
 
     override fun onCleared() {

@@ -37,16 +37,16 @@ class MainFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = GridLayoutManager(context, 2)
         recyclerView.layoutManager = layoutManager
-        val liked = sharedViewModel!!.jeansDatabase.jeansDao.allItems
+        val liked = sharedViewModel!!.jeansDatabase!!.jeansDao.allItems
         val mainAdapter = MainAdapter(jeansList, liked)
         mainAdapter.setOnLikeClickListener { likedJeans: Jeans?, position: Int, addToFavourite: Boolean ->
             if (addToFavourite) {
-                sharedViewModel!!.jeansDatabase.jeansDao.insert(likedJeans)
+                sharedViewModel!!.jeansDatabase!!.jeansDao.insert(likedJeans)
                 Log.d("123", "Добавлено в избранное")
                 showLikeNotification()
                 //Log.d("123", jeansDatabase.getJeansDao().getItemById(likedJeans.getId()).toString());
             } else {
-                sharedViewModel!!.jeansDatabase.jeansDao.delete(likedJeans)
+                sharedViewModel!!.jeansDatabase!!.jeansDao.delete(likedJeans)
                 Log.d("123", "Убрано из избранного")
             }
         }

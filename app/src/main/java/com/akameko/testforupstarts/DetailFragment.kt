@@ -56,7 +56,7 @@ class DetailFragment : Fragment() {
 
         var jeansToShow = sharedViewModel!!.activeJeans
 
-        var liked = sharedViewModel!!.jeansDatabase.jeansDao.allItems.contains(jeansToShow)
+        var liked = sharedViewModel!!.jeansDatabase!!.jeansDao.allItems.contains(jeansToShow)
         if (liked!!) {
             buttonLike!!.foreground = resources.getDrawable(R.drawable.like_true)
         } else {
