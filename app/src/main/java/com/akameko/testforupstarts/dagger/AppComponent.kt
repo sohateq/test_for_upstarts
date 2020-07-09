@@ -10,8 +10,9 @@ import javax.inject.Singleton
 @Component(dependencies = [], modules = [AppModule::class, RoomModule::class, RepositoryModule::class])
 interface AppComponent {
     //void injectMainPresenter(MainPresenter mainPresenter);
-    val jeansDatabase: JeansDatabase?
+    val jeansDatabase: JeansDatabase
 
-    val repository: Repository?
+    val repository: Repository
+
     val application: Application?
 }
