@@ -65,7 +65,7 @@ public class DetailFragment extends Fragment {
         }
 
         textViewTitle.setText(jeansToShow.getTitle());
-        textViewPrice.setText(jeansToShow.getPrice().toString() + " Р");
+        textViewPrice.setText(String.format("%s %s", jeansToShow.getPrice().toString(), getResources().getString(R.string.text_rubble_letter)));
         Picasso.get().load(jeansToShow.getImage()).into(imageView);
 
         buttonBack.setOnClickListener(v -> {

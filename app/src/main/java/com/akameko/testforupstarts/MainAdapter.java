@@ -97,7 +97,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         }
 
         holder.textViewTitle.setText(jeansList.get(position).getTitle());
-        holder.textViewPrice.setText(jeansList.get(position).getPrice().toString() + " Р");
+        holder.textViewPrice.setText(String.format("%s %s", jeansList.get(position).getPrice().toString(), parent.getResources().getString(R.string.text_rubble_letter)));
 
         if (jeansList.get(position).getNew()) {
             holder.textViewNew.setVisibility(View.VISIBLE);
