@@ -37,11 +37,6 @@ public class DetailFragment extends Fragment {
     private Button buttonLike;
     private Button buttonBack;
 
-    public DetailFragment() {
-        // Required empty public constructor
-    }
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

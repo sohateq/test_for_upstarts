@@ -25,7 +25,7 @@ public class SharedViewModel extends ViewModel {
 
 
     private Jeans activeJeans;
-   // private Integer positionToShow;
+
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -65,17 +65,7 @@ public class SharedViewModel extends ViewModel {
         return activeJeans;
     }
 
-//    public void setPositionToUpdate(Integer position){
-//        positionToUpdate.setValue(position);
-//    }
 
-//    public Integer getPositionToShow() {
-//        return positionToShow;
-//    }
-//
-//    public void setPositionToShow(Integer positionToShow) {
-//        this.positionToShow = positionToShow;
-//    }
 
     @Override
     protected void onCleared() {

@@ -76,12 +76,13 @@ public class MainFragment extends Fragment {
 
         mainAdapter.setOnLikeClickListener((likedJeans, position, addToFavourite) -> {
             if (addToFavourite){
-                sharedViewModel.jeansDatabase.getJeansDao().insert(likedJeans);
+                sharedViewModel.addToFavourite(likedJeans);
                 Log.d("123", "Добавлено в избранное");
                 showLikeNotification();
-                //Log.d("123", jeansDatabase.getJeansDao().getItemById(likedJeans.getId()).toString());
+
             } else {
-                sharedViewModel.jeansDatabase.getJeansDao().delete(likedJeans);
+                sharedViewModel.removeFromFavourite(likedJeans);
+
                 Log.d("123", "Убрано из избранного");
             }
 
@@ -90,7 +91,7 @@ public class MainFragment extends Fragment {
 
         mainAdapter.setOnItemClickListener((jeansToShow, position) -> {
             sharedViewModel.setActiveJeans(jeansToShow);
-            //sharedViewModel.setPositionToShow(position);
+
             ((MainActivity)getActivity()).showDetails();
         });
 
