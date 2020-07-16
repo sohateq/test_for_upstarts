@@ -13,6 +13,7 @@ import com.akameko.testforupstarts.repository.room.JeansDatabase;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -22,10 +23,11 @@ public class SharedViewModel extends ViewModel {
     public JeansDatabase jeansDatabase = App.getComponent().getJeansDatabase();
     public MutableLiveData<List<Jeans>> jeansList = new MutableLiveData<>();
 
-    private Jeans activeJeans;
-    private Integer positionToShow;
 
-    //private MutableLiveData<Integer> positionToUpdate = new MutableLiveData<>();
+    private Jeans activeJeans;
+   // private Integer positionToShow;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public void loadJeans(){
         Disposable disposable = repository.getJeans()
@@ -42,6 +44,7 @@ public class SharedViewModel extends ViewModel {
                     Log.d("123", "Items loading failed", throwable);
                     //Toast.makeText(this,"load error", Toast.LENGTH_SHORT).show();
                 });
+        compositeDisposable.add(disposable);
     }
 
     public void addToFavourite(Jeans likedJeans){
@@ -66,17 +69,17 @@ public class SharedViewModel extends ViewModel {
 //        positionToUpdate.setValue(position);
 //    }
 
-    public Integer getPositionToShow() {
-        return positionToShow;
-    }
-
-    public void setPositionToShow(Integer positionToShow) {
-        this.positionToShow = positionToShow;
-    }
+//    public Integer getPositionToShow() {
+//        return positionToShow;
+//    }
+//
+//    public void setPositionToShow(Integer positionToShow) {
+//        this.positionToShow = positionToShow;
+//    }
 
     @Override
     protected void onCleared() {
-
+        compositeDisposable.dispose();
         super.onCleared();
     }
 }

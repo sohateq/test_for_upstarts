@@ -70,6 +70,8 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         List<Jeans> liked = sharedViewModel.jeansDatabase.getJeansDao().getAllItems();
+
+
         MainAdapter mainAdapter = new MainAdapter(jeansList, liked);
 
         mainAdapter.setOnLikeClickListener((likedJeans, position, addToFavourite) -> {
@@ -88,7 +90,7 @@ public class MainFragment extends Fragment {
 
         mainAdapter.setOnItemClickListener((jeansToShow, position) -> {
             sharedViewModel.setActiveJeans(jeansToShow);
-            sharedViewModel.setPositionToShow(position);
+            //sharedViewModel.setPositionToShow(position);
             ((MainActivity)getActivity()).showDetails();
         });
 
