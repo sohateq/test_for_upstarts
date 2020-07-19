@@ -103,7 +103,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             holder.textViewNew.setVisibility(View.VISIBLE);
         }
 
-        Picasso.get().load(jeansList.get(position).getImage()).into(holder.imageViewMain);
+        Picasso.get()
+                .load(jeansList.get(position).getImage())
+                .placeholder(parent.getResources().getDrawable(R.drawable.photo_placeholder))
+                .into(holder.imageViewMain);
+
 
         holder.imageViewLike.setOnClickListener(v -> {
             if (likeClickListener != null ) {
