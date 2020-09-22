@@ -4,43 +4,86 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.akameko.testforupstarts.dagger.App
+import com.akameko.testforupstarts.dagger.DaggerAppComponent
 import com.akameko.testforupstarts.repository.pojos.Jeans
+import com.akameko.testforupstarts.repository.retrofit.Repository
+import com.akameko.testforupstarts.repository.room.JeansDatabase
+import com.akameko.testforupstarts.ui.MainFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class SharedViewModel : ViewModel() {
-    var repository = App.component!!.repository
-    var jeansDatabase = App.component!!.jeansDatabase
+
+    companion object {
+        const val TAG = "SharedViewModel"
+    }
+
+    init {
+        App.component.injectSharedViewModel(this)
+    }
+    
+    @Inject
+    lateinit var repository: Repository
+    @Inject
+    lateinit var jeansDatabase: JeansDatabase
 
     var jeansList = MutableLiveData<List<Jeans>>()
 
     var activeJeans: Jeans? = null
-    //    public void setPositionToUpdate(Integer position){
-//        positionToUpdate.setValue(position);
-//    }
     var positionToShow: Int? = null
 
-    var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    //private MutableLiveData<Integer> positionToUpdate = new MutableLiveData<>();
+    /**
+     * Loads [Jeans] List from server to [jeansList] asynchronously
+     */
     fun loadJeans() {
         val disposable = repository.jeans
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result: List<Jeans> ->
                     jeansList.value = result
-                    Log.d("123", "Items loaded!!")
-                }) { throwable: Throwable? -> Log.d("123", "Items loading failed", throwable) }
+                    Log.d(TAG, "Items loaded!!")
+                }) { throwable: Throwable? -> Log.d(TAG, "Items loading failed", throwable) }
         compositeDisposable.add(disposable)
     }
 
-    fun addToFavourite(likedJeans: Jeans?) {
+    /**
+     * Adds [Jeans] to app database
+     *
+     * @param likedJeans is [Jeans] to be added to favourite
+     */
+    fun addToFavourite(likedJeans: Jeans) {
         jeansDatabase.jeansDao.insert(likedJeans)
     }
 
-    fun removeFromFavourite(dislikedJeans: Jeans?) {
+    /**
+     * Deletes [Jeans] from app database
+     *
+     * @param dislikedJeans is [Jeans] to be deleted
+     */
+    fun removeFromFavourite(dislikedJeans: Jeans) {
         jeansDatabase.jeansDao.delete(dislikedJeans)
+    }
+
+    /**
+     * Provides all liked [Jeans] stored in app database
+     */
+    fun getAllFavouritesJeansList(): List<Jeans> {
+        return jeansDatabase.jeansDao.allItems
+    }
+
+    /**
+     * Prepares this [SharedViewModel] for [DetailFragment]. Should be used before navigate to [DetailFragment]
+     *
+     * @param jeansToShow is [Jeans] object to be shown
+     * @param positionToShow is position of chosen is main RecyclerView [jeansToShow]
+     */
+    fun setDataForDetailFragment(jeansToShow: Jeans, position: Int) {
+        activeJeans = jeansToShow
+        positionToShow = position
     }
 
     override fun onCleared() {

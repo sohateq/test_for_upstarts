@@ -18,7 +18,7 @@ interface JeansDao {
     fun deleteAll()
 
     @get:Query("SELECT * FROM jeans")
-    val allItems: List<Jeans?>?
+    val allItems: List<Jeans>
 
     @Query("SELECT * FROM jeans WHERE id == :id")
     fun getItemById(id: Int?): Jeans?

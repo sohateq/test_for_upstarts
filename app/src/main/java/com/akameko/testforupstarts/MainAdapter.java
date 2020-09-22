@@ -21,7 +21,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private List<Jeans> jeansList;
     private List<Jeans> likedJeansList;
 
-    private ViewGroup parent; //для предоставления локальных ресурсов в onBingViewHolder
+    private ViewGroup parent; // Use to get local resources in onBingViewHolder
 
     private OnLikeClickListener likeClickListener;
     private OnItemClickListener itemClickListener;
@@ -37,10 +37,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public interface OnItemClickListener {
         void onItemClick(Jeans jeansToShow, int position);
     }
-    public void setOnItemClickListener(OnItemClickListener itemClickListener){
-        this .itemClickListener = itemClickListener;
-    }
 
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ConstraintLayout layoutItemMain;
@@ -54,7 +54,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         public Boolean liked;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewNew = itemView.findViewById(R.id.text_view_new);
@@ -65,9 +64,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             imageViewLike = itemView.findViewById(R.id.image_view_like);
 
             layoutItemMain = itemView.findViewById(R.id.main_item_layout);
-
-
-
         }
     }
 
@@ -90,7 +86,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.liked = likedJeansList.contains(jeansList.get(position));
         //Log.d("onBindViewHolder", holder.liked.toString());
 
-        if ( holder.liked){
+        if (holder.liked) {
             holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
         } else {
             holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false));
@@ -106,9 +102,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         Picasso.get().load(jeansList.get(position).getImage()).into(holder.imageViewMain);
 
         holder.imageViewLike.setOnClickListener(v -> {
-            if (likeClickListener != null ) {
+            if (likeClickListener != null) {
 
-                if ( holder.liked) {
+                if (holder.liked) {
                     holder.liked = false;
                     holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false));
                 } else {
@@ -116,24 +112,22 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                     holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
                 }
 
-                likeClickListener.onLikeClick(jeansList.get(position), position,  holder.liked);
+                likeClickListener.onLikeClick(jeansList.get(position), position, holder.liked);
             }
         });
 
         holder.layoutItemMain.setOnClickListener(v -> {
-            if (itemClickListener != null ) {
+            if (itemClickListener != null) {
 
                 itemClickListener.onItemClick(jeansList.get(position), position);
             }
         });
 
 
-
-
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount() { if (jeansList == null) return 0;
         return jeansList.size();
     }
 }

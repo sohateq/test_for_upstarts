@@ -1,8 +1,9 @@
-package com.akameko.testforupstarts
+package com.akameko.testforupstarts.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import com.akameko.testforupstarts.R
 
 class MainActivity : AppCompatActivity() {
 
