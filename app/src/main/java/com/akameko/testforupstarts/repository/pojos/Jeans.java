@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 @Entity
@@ -30,11 +32,12 @@ public class Jeans {
     @Expose
     private Boolean _new;
 
+    @NotNull
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@NotNull Integer id) {
         this.id = id;
     }
 
@@ -70,6 +73,7 @@ public class Jeans {
         this._new = _new;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Jeans{" +

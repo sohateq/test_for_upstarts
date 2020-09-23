@@ -6,7 +6,8 @@
     <string name="add_to_cart">Добавить в корзину</string>
     <string name="text_counter">Найдено: %d товаров</string>
     <string name="added_to_favourite">Товар добавлен в избранное</string>
-    <string name="deleted_from_favourite">Удалено из избранного</string>
+    <string name="removed_from_favourite">Удалено из избранного</string>
 
+    <string name="text_view_price">%.1f Р</string>
 
 </resources>

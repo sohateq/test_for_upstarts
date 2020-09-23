@@ -1,28 +1,23 @@
 package com.akameko.testforupstarts.ui
 
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.akameko.testforupstarts.R
-import com.akameko.testforupstarts.SharedViewModel
+import com.akameko.testforupstarts.repository.pojos.Jeans
 import com.akameko.testforupstarts.utils.Notificator
 import com.squareup.picasso.Picasso
 
 /**
- * A simple [Fragment] subclass.
+ * A simple [Fragment] subclass, shows details of chosen [Jeans] on [MainFragment]
  */
 class DetailFragment : Fragment() {
     private lateinit var sharedViewModel: SharedViewModel
@@ -36,7 +31,6 @@ class DetailFragment : Fragment() {
     private lateinit var buttonLike: Button
     private lateinit var buttonBack: Button
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_detail, container, false)
@@ -48,45 +42,48 @@ class DetailFragment : Fragment() {
         buttonLike = root.findViewById(R.id.button_detail_like)
         buttonBack = root.findViewById(R.id.button_detail_back)
 
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
         init()
 
         return root
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private fun init() {
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        val jeansToShow = sharedViewModel.activeJeans ?: return
 
-        var jeansToShow = sharedViewModel.activeJeans ?: return
+        var liked = sharedViewModel.getAllFavouritesJeansList().contains(jeansToShow)
 
-        var liked = sharedViewModel.jeansDatabase.jeansDao.allItems.contains(jeansToShow)
-        if (liked) {
-            buttonLike.foreground = resources.getDrawable(R.drawable.like_true)
-        } else {
-            buttonLike.foreground = resources.getDrawable(R.drawable.like_false)
-        }
+        resolveLikeButton(buttonLike, liked)
 
-        textViewTitle.text = jeansToShow.getTitle()
-        textViewPrice.text = jeansToShow.getPrice().toString() + " Р"
+        textViewTitle.text = jeansToShow.title
+        textViewPrice.text = String.format(getString(R.string.text_view_price), jeansToShow.price)
 
-        Picasso.get().load(jeansToShow.getImage()).into(imageView)
+        Picasso.get().load(jeansToShow.image).into(imageView)
 
         buttonBack.setOnClickListener { activity?.onBackPressed() }
+
         buttonLike.setOnClickListener {
             if (liked) {
                 liked = false
-                buttonLike.foreground = resources.getDrawable(R.drawable.like_false)
                 sharedViewModel.removeFromFavourite(jeansToShow)
+                Notificator.showNotification(imageViewWrapper, activity, getString(R.string.removed_from_favourite))
             } else {
                 liked = true
-                buttonLike.foreground = resources.getDrawable(R.drawable.like_true)
                 sharedViewModel.addToFavourite(jeansToShow)
-                Notificator.showLikeNotification(imageViewWrapper, activity)
+                Notificator.showNotification(imageViewWrapper, activity, getString(R.string.added_to_favourite))
             }
+            resolveLikeButton(buttonLike, liked)
         }
     }
 
-
+    private fun resolveLikeButton(button: Button, liked: Boolean) {
+        if (liked) {
+            button.foreground = resources.getDrawable(R.drawable.like_true, null)
+        } else {
+            button.foreground = resources.getDrawable(R.drawable.like_false, null)
+        }
+    }
 
     override fun onStart() {
         super.onStart()

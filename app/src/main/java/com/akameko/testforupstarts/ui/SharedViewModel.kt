@@ -1,29 +1,26 @@
-package com.akameko.testforupstarts
+package com.akameko.testforupstarts.ui
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.akameko.testforupstarts.dagger.App
-import com.akameko.testforupstarts.dagger.DaggerAppComponent
 import com.akameko.testforupstarts.repository.pojos.Jeans
 import com.akameko.testforupstarts.repository.retrofit.Repository
 import com.akameko.testforupstarts.repository.room.JeansDatabase
-import com.akameko.testforupstarts.ui.MainFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
+/**
+ * [ViewModel] used for [MainFragment] and [DetailFragment]
+ */
 class SharedViewModel : ViewModel() {
 
     companion object {
         const val TAG = "SharedViewModel"
     }
 
-    init {
-        App.component.injectSharedViewModel(this)
-    }
-    
     @Inject
     lateinit var repository: Repository
     @Inject
@@ -36,6 +33,11 @@ class SharedViewModel : ViewModel() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
+    init {
+        App.component.injectSharedViewModel(this)
+        loadJeans()
+    }
+
     /**
      * Loads [Jeans] List from server to [jeansList] asynchronously
      */
@@ -47,6 +49,7 @@ class SharedViewModel : ViewModel() {
                     jeansList.value = result
                     Log.d(TAG, "Items loaded!!")
                 }) { throwable: Throwable? -> Log.d(TAG, "Items loading failed", throwable) }
+
         compositeDisposable.add(disposable)
     }
 

@@ -19,11 +19,12 @@
         android:background="@color/colorPrimaryDark">
 
         <TextView
+            android:id="@+id/card_view_notification_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
 
-            android:text="@string/added_to_favourite"
+            tools:text="Notification"
             android:textColor="@android:color/background_light"
 
             android:textSize="14sp"

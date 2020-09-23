@@ -7,14 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.akameko.testforupstarts.MainAdapter
 import com.akameko.testforupstarts.R
-import com.akameko.testforupstarts.SharedViewModel
 import com.akameko.testforupstarts.repository.pojos.Jeans
 import com.akameko.testforupstarts.utils.Notificator
 
@@ -41,14 +38,12 @@ class MainFragment : Fragment() {
         val root = inflater.inflate(R.layout.main_fragment, container, false)
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         initViews(root)
-        initFragment()
         return root
     }
 
-    private fun initFragment() {
-        //TODO
+    override fun onResume() {
+        super.onResume()
         sharedViewModel.loadJeans()
-        sharedViewModel.jeansList.observe(viewLifecycleOwner, Observer { jeansList: List<Jeans> -> updateFragmentView(jeansList) })
     }
 
     private fun initViews(rootView: View) {
@@ -68,27 +63,32 @@ class MainFragment : Fragment() {
                 if (addToFavourite) {
                     sharedViewModel.addToFavourite(likedJeans)
                     Log.d(TAG, "Added to favourite")
-                    Notificator.showLikeNotification(rootView, activity)
-                    //Log.d("123", jeansDatabase.getJeansDao().getItemById(likedJeans.getId()).toString());
+                    Notificator.showNotification(rootView, activity, getString(R.string.added_to_favourite))
                 } else {
                     sharedViewModel.removeFromFavourite(likedJeans)
                     Log.d(TAG, "Removed from favourite")
+                    Notificator.showNotification(rootView, activity, getString(R.string.removed_from_favourite))
                 }
             }
             setOnItemClickListener { jeansToShow: Jeans, position: Int ->
                 sharedViewModel.setDataForDetailFragment(jeansToShow, position)
 
-                //TODO
+                //TODO navigator
                 (activity as MainActivity?)?.showDetails()
             }
 
             recyclerView.adapter = this
         }
         textViewCounter = rootView.findViewById(R.id.text_view_main_count)
+
+        sharedViewModel.jeansList.observe(viewLifecycleOwner, { jeansList: List<Jeans> -> updateFragmentView(jeansList) })
+
     }
 
     private fun updateFragmentView(jeansList: List<Jeans>) {
+        this.jeansList.clear()
         this.jeansList.addAll(jeansList)
+        this.likedJeansList.clear()
         this.likedJeansList.addAll(sharedViewModel.getAllFavouritesJeansList())
         mainAdapter.notifyDataSetChanged()
 

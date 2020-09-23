@@ -1,7 +1,7 @@
 package com.akameko.testforupstarts.dagger
 
 import android.app.Application
-import com.akameko.testforupstarts.SharedViewModel
+import com.akameko.testforupstarts.ui.SharedViewModel
 import com.akameko.testforupstarts.repository.retrofit.Repository
 import com.akameko.testforupstarts.repository.room.JeansDatabase
 import dagger.Component
