@@ -9,6 +9,7 @@ import com.akameko.testforupstarts.ui.MainFragment
 
 /**
  * Screen navigation helper
+ * ToDo jetpack navigation?
  */
 object Navigator {
 

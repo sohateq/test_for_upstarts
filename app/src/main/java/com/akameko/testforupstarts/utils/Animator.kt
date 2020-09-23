@@ -11,7 +11,7 @@ object Animator {
     private const val ANIMATION_DURATION = 500L
 
     /**
-     * Smoothly shows [view] and hides
+     * Smoothly shows [view] and hides it
      *
      * @param view to be shown and hide
      */

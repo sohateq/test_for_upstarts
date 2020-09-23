@@ -50,24 +50,25 @@ class MainFragment : Fragment() {
         recyclerView.apply {
             itemAnimator = DefaultItemAnimator()
             setHasFixedSize(true)
-            val layoutManager = GridLayoutManager(context, 2)
-            this.layoutManager = layoutManager
+            layoutManager = GridLayoutManager(context, 2)
         }
 
         // init mainAdapter
         mainAdapter = MainAdapter(jeansList, likedJeansList)
         mainAdapter.apply {
+            // click listener for like button
             setOnLikeClickListener { likedJeans: Jeans, _: Int, addToFavourite: Boolean ->
                 if (addToFavourite) {
                     sharedViewModel.addToFavourite(likedJeans)
                     Log.d(TAG, "Added to favourite")
-                    Notificator.showNotification(rootView, activity, getString(R.string.added_to_favourite))
+                    Notificator.showNotification(rootView, getString(R.string.added_to_favourite))
                 } else {
                     sharedViewModel.removeFromFavourite(likedJeans)
                     Log.d(TAG, "Removed from favourite")
-                    Notificator.showNotification(rootView, activity, getString(R.string.removed_from_favourite))
+                    Notificator.showNotification(rootView, getString(R.string.removed_from_favourite))
                 }
             }
+            // click listener on item
             setOnItemClickListener { jeansToShow: Jeans, position: Int ->
                 sharedViewModel.setDataForDetailFragment(jeansToShow, position)
 
@@ -83,6 +84,7 @@ class MainFragment : Fragment() {
     }
 
     private fun updateFragmentView(jeansList: List<Jeans>) {
+        //update recyclerView
         this.jeansList.clear()
         this.jeansList.addAll(jeansList)
         this.likedJeansList.clear()

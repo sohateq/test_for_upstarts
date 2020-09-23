@@ -67,11 +67,11 @@ class DetailFragment : Fragment() {
             if (liked) {
                 liked = false
                 sharedViewModel.removeFromFavourite(jeansToShow)
-                Notificator.showNotification(imageViewWrapper, activity, getString(R.string.removed_from_favourite))
+                Notificator.showNotification(imageViewWrapper, getString(R.string.removed_from_favourite))
             } else {
                 liked = true
                 sharedViewModel.addToFavourite(jeansToShow)
-                Notificator.showNotification(imageViewWrapper, activity, getString(R.string.added_to_favourite))
+                Notificator.showNotification(imageViewWrapper, getString(R.string.added_to_favourite))
             }
             resolveLikeButton(buttonLike, liked)
         }

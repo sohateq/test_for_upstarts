@@ -18,10 +18,10 @@ object Notificator {
      * @param rootView ViewGroup to receive notification at the bottom
      * @param context Current context
      */
-    fun showNotification(rootView: View, context: Context?, message: String? = "Notification") {
-        context ?: return
+    fun showNotification(rootView: View, message: String? = "Notification") {
+        rootView.context ?: return
 
-        val cardViewNotification = LayoutInflater.from(context).inflate(R.layout.notification_layout, rootView as ViewGroup, false)
+        val cardViewNotification = LayoutInflater.from(rootView.context).inflate(R.layout.notification_layout, rootView as ViewGroup, false)
         cardViewNotification.findViewById<TextView>(R.id.card_view_notification_text_view).text = message
         rootView.addView(cardViewNotification)
         Animator.fadeInAndOut(cardViewNotification)
