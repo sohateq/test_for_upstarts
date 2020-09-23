@@ -13,15 +13,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akameko.testforupstarts.R
 import com.akameko.testforupstarts.repository.pojos.Jeans
+import com.akameko.testforupstarts.utils.Navigator
 import com.akameko.testforupstarts.utils.Notificator
 
 class MainFragment : Fragment() {
 
     companion object {
         const val TAG = "MainFragment"
-        fun newInstance(): MainFragment {
-            return MainFragment()
-        }
     }
 
     private lateinit var sharedViewModel: SharedViewModel
@@ -73,8 +71,7 @@ class MainFragment : Fragment() {
             setOnItemClickListener { jeansToShow: Jeans, position: Int ->
                 sharedViewModel.setDataForDetailFragment(jeansToShow, position)
 
-                //TODO navigator
-                (activity as MainActivity?)?.showDetails()
+                Navigator.navigateToDetailsFragment(activity)
             }
 
             recyclerView.adapter = this

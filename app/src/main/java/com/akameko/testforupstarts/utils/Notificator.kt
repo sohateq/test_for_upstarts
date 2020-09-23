@@ -1,13 +1,15 @@
 package com.akameko.testforupstarts.utils
 
 import android.content.Context
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.akameko.testforupstarts.R
-//ToDo anim
+
+/**
+ * User notification helper
+ */
 object Notificator {
 
     /**
@@ -19,11 +21,9 @@ object Notificator {
     fun showNotification(rootView: View, context: Context?, message: String? = "Notification") {
         context ?: return
 
-        val inflater = LayoutInflater.from(context)
-        val cardViewNotification = inflater.inflate(R.layout.notification_layout, rootView as ViewGroup, false)
+        val cardViewNotification = LayoutInflater.from(context).inflate(R.layout.notification_layout, rootView as ViewGroup, false)
         cardViewNotification.findViewById<TextView>(R.id.card_view_notification_text_view).text = message
         rootView.addView(cardViewNotification)
-        val h = Handler()
-        h.postDelayed({ cardViewNotification.visibility = View.GONE }, 3000)
+        Animator.fadeInAndOut(cardViewNotification)
     }
 }

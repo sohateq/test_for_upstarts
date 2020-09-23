@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.akameko.testforupstarts.R
+import com.akameko.testforupstarts.utils.Navigator
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,19 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.container, MainFragment.newInstance())
-                    .commitNow()
+            Navigator.navigateToMainFragment(this)
         }
-    }
-
-    fun showDetails() {
-        val detailFragment = DetailFragment()
-        val fm = supportFragmentManager
-        fm.beginTransaction()
-                .replace(R.id.container, detailFragment)
-                .addToBackStack("")
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
     }
 }
