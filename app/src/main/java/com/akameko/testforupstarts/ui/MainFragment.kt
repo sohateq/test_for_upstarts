@@ -72,7 +72,7 @@ class MainFragment : Fragment() {
             setOnItemClickListener { jeansToShow: Jeans, position: Int ->
                 sharedViewModel.setDataForDetailFragment(jeansToShow, position)
 
-                Navigator.navigateToDetailsFragment(activity)
+                Navigator.navigateToDetailsFragment(this@MainFragment)
             }
 
             recyclerView.adapter = this

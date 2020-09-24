@@ -21,7 +21,7 @@ object Animator {
             duration = ANIMATION_DURATION
             start()
         }
-        //fades view out after some time
+        //fades view out after fade in complete
         ObjectAnimator.ofFloat(view, "alpha", 1f, 0f).apply {
             duration = ANIMATION_DURATION
             startDelay = ANIMATION_DURATION * 3

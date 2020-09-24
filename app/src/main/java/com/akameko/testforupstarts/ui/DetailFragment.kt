@@ -11,8 +11,10 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.akameko.testforupstarts.R
 import com.akameko.testforupstarts.repository.pojos.Jeans
+import com.akameko.testforupstarts.utils.Navigator
 import com.akameko.testforupstarts.utils.Notificator
 import com.squareup.picasso.Picasso
 
@@ -61,7 +63,7 @@ class DetailFragment : Fragment() {
 
         Picasso.get().load(jeansToShow.image).into(imageView)
 
-        buttonBack.setOnClickListener { activity?.onBackPressed() }
+        buttonBack.setOnClickListener { Navigator.backPressed(buttonBack) }
 
         buttonLike.setOnClickListener {
             if (liked) {
