@@ -13,7 +13,7 @@ import com.akameko.testforupstarts.R
 object Navigator {
 
     /**
-     * Navigates to [DetailFragment] from activity
+     * Navigates to [DetailFragment] from fragment
      *
      * @param fragment to get havController from
      */
@@ -22,7 +22,7 @@ object Navigator {
     }
 
     /**
-     * Navigates to [DetailFragment] from fragment
+     * Navigates to [DetailFragment] from activity
      *
      * @param activity to get havController from
      */
