@@ -10,7 +10,12 @@ import javax.inject.Singleton
 
 @Module
 class RoomModule(application: Application) {
-    private val db: JeansDatabase
+
+    private val db: JeansDatabase = Room
+            .databaseBuilder(application.applicationContext, JeansDatabase::class.java, "database")
+            .allowMainThreadQueries()
+            .build()
+
     @Singleton
     @Provides
     fun provideJeansDatabase(): JeansDatabase {
@@ -19,11 +24,7 @@ class RoomModule(application: Application) {
 
     @Singleton
     @Provides
-    fun provideJeansDao(jeansDatabase: JeansDatabase?): JeansDao {
+    fun provideJeansDao(): JeansDao {
         return db.jeansDao
-    }
-
-    init {
-        db = Room.databaseBuilder(application.applicationContext, JeansDatabase::class.java, "database").allowMainThreadQueries().build()
     }
 }

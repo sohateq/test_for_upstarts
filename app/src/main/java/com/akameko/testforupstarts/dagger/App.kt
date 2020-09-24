@@ -3,6 +3,7 @@ package com.akameko.testforupstarts.dagger
 import android.app.Application
 
 class App : Application() {
+
     override fun onCreate() {
         super.onCreate()
         component = DaggerAppComponent.builder()
@@ -13,7 +14,7 @@ class App : Application() {
     }
 
     companion object {
-        var component: AppComponent? = null
+        lateinit var component: AppComponent
             private set
     }
 }

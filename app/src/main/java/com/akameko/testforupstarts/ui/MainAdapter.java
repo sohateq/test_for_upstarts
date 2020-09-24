@@ -1,6 +1,5 @@
-package com.akameko.testforupstarts;
+package com.akameko.testforupstarts.ui;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akameko.testforupstarts.R;
 import com.akameko.testforupstarts.repository.pojos.Jeans;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private List<Jeans> jeansList;
     private List<Jeans> likedJeansList;
 
-    private ViewGroup parent; //для предоставления локальных ресурсов в onBingViewHolder
+    private ViewGroup parent; // Used to get local resources in onBingViewHolder
 
     private OnLikeClickListener likeClickListener;
     private OnItemClickListener itemClickListener;
@@ -37,12 +39,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public interface OnItemClickListener {
         void onItemClick(Jeans jeansToShow, int position);
     }
-    public void setOnItemClickListener(OnItemClickListener itemClickListener){
-        this .itemClickListener = itemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public ConstraintLayout layoutItemMain;
 
         public ImageView imageViewMain;
@@ -54,7 +56,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         public Boolean liked;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewNew = itemView.findViewById(R.id.text_view_new);
@@ -65,9 +66,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             imageViewLike = itemView.findViewById(R.id.image_view_like);
 
             layoutItemMain = itemView.findViewById(R.id.main_item_layout);
-
-
-
         }
     }
 
@@ -81,8 +79,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         this.parent = parent;
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -90,50 +87,47 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.liked = likedJeansList.contains(jeansList.get(position));
         //Log.d("onBindViewHolder", holder.liked.toString());
 
-        if ( holder.liked){
-            holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
-        } else {
-            holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false));
-        }
+        resolveLike(holder.imageViewLike, holder.liked);
 
         holder.textViewTitle.setText(jeansList.get(position).getTitle());
-        holder.textViewPrice.setText(jeansList.get(position).getPrice().toString() + " Р");
+        holder.textViewPrice.setText(String.format(parent.getResources().getString(R.string.text_view_price), jeansList.get(position).getPrice()));
 
         if (jeansList.get(position).getNew()) {
             holder.textViewNew.setVisibility(View.VISIBLE);
         }
 
-        Picasso.get().load(jeansList.get(position).getImage()).into(holder.imageViewMain);
+        Picasso.get()
+                .load(jeansList.get(position).getImage())
+                .placeholder(parent.getResources().getDrawable(R.drawable.photo_placeholder, null))
+                .into(holder.imageViewMain);
 
         holder.imageViewLike.setOnClickListener(v -> {
-            if (likeClickListener != null ) {
+            if (likeClickListener != null) {
+                holder.liked = !holder.liked;
 
-                if ( holder.liked) {
-                    holder.liked = false;
-                    holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false));
-                } else {
-                    holder.liked = true;
-                    holder.imageViewLike.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true));
-                }
+                resolveLike(holder.imageViewLike, holder.liked);
 
-                likeClickListener.onLikeClick(jeansList.get(position), position,  holder.liked);
+                likeClickListener.onLikeClick(jeansList.get(position), position, holder.liked);
             }
         });
 
         holder.layoutItemMain.setOnClickListener(v -> {
-            if (itemClickListener != null ) {
-
+            if (itemClickListener != null) {
                 itemClickListener.onItemClick(jeansList.get(position), position);
             }
         });
-
-
-
-
     }
 
     @Override
     public int getItemCount() {
         return jeansList.size();
+    }
+
+    private void resolveLike(@NotNull ImageView imageView, @NotNull Boolean liked) {
+        if (liked) {
+            imageView.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_true, null));
+        } else {
+            imageView.setImageDrawable(parent.getResources().getDrawable(R.drawable.like_false, null));
+        }
     }
 }
